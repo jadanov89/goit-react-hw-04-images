@@ -14,21 +14,7 @@ const App = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [isSearchCompleted, setIsSearchCompleted] = useState(false);
 
-  useEffect(() => {
-    if (isSearchCompleted) {
-      fetchImages();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, page, isSearchCompleted]);
-
-  const onSearch = useCallback(newSearch => {
-    setSearch(newSearch);
-    setPage(1);
-    setHits([]);
-    setIsSearchCompleted(true);
-  }, []);
-
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     setLoadingMore(true);
     setError(null);
 
@@ -47,7 +33,20 @@ const App = () => {
       setError(error);
       setLoadingMore(false);
     }
-  };
+  }, [search, page]);
+
+  useEffect(() => {
+    if (isSearchCompleted) {
+      fetchImages();
+    }
+  }, [search, page, isSearchCompleted, fetchImages]);
+
+  const onSearch = useCallback(newSearch => {
+    setSearch(newSearch);
+    setPage(1);
+    setHits([]);
+    setIsSearchCompleted(true);
+  }, []);
 
   const loadMore = () => {
     setLoadingMore(true);
@@ -78,8 +77,5 @@ const App = () => {
     </div>
   );
 };
-//jjjj
+
 export default App;
-
-
-
